@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acrylic Nameplate self-test</title>
+  <style>
+    body{margin:0;font:14px/1.5 ui-monospace, Menlo, monospace;background:#121211;color:#E8E6E0}
+    .row{display:grid;gap:48px;padding:48px 16px}
+    acrylic-nameplate{width:100%;max-width:520px;margin:0 auto}
+    pre{padding:0 16px 48px;white-space:pre-wrap}
+  </style>
+</head>
+<body>
+  <div class="row">
+    <acrylic-nameplate id="a" name="nadia" job-title="product designer" sound="off" haptics="off"></acrylic-nameplate>
+    <acrylic-nameplate id="b" name="Alexandra Montgomery-Whitfield" job-title="senior brand and product designer at a company with a very long name" sound="off"></acrylic-nameplate>
+    <acrylic-nameplate id="c" name="nadia" email="hi@example.com" linkedin="https://www.linkedin.com/" mark="example.com" start="off" sound="off"></acrylic-nameplate>
+  </div>
+  <pre id="out">running…</pre>
+  <script type="module" src="./selftest.ts"></script>
+</body>
+</html>
