@@ -83,7 +83,7 @@ Set these on the element or any parent.
 | `--an-name-font` | Geist Pixel (used when `pixel-face="off"`) |
 | `--an-name-weight` | `400` |
 | `--an-name-tracking` | `-0.045em` |
-| `--an-role-font` | `inherit` |
+| `--an-role-font` | Geist, then the system sans |
 | `--an-role-size` | `14` (unitless, px at a 520px plate) |
 | `--an-mark-font` | Geist Pixel (used when `pixel-face="off"`) |
 | `--an-mark-size` | `12` (unitless, px at a 520px plate) |

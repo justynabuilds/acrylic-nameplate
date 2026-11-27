@@ -4,6 +4,7 @@ All notable changes to this project are listed here. Versions follow [semantic v
 
 ## Unreleased
 
+- The job title uses Geist (or the system sans) instead of the page font, so it never falls back to a serif on a bare page.
 - Tilt is now off by default; set `tilt="on"` to turn it back on.
 - The demo and playground start with an example photo and example links.
 

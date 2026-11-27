@@ -89,7 +89,7 @@ export const STYLES = `
 .root.pixel .name { font-family: ${PIXEL_FAMILY}; }
 .role {
   margin-top: ${u(20)}; max-width: 100%; user-select: none; -webkit-user-select: none;
-  font-family: var(--an-role-font, inherit);
+  font-family: var(--an-role-font, "Geist", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif);
   font-size: calc(var(--an-role-size, 14) * var(--u));
   letter-spacing: 0.06em; line-height: 1.2;
   color: rgba(var(--g), calc(0.3 + 0.55 * var(--on)));
