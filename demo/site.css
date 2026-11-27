@@ -1,14 +1,14 @@
-/* The demo stage: the nameplate alone on a dark graphite page, like a component preview page.
+/* The demo stage: the nameplate alone on a light page, like a component preview page.
    Used full-page on / and inside the playground preview. */
-.an-stage{--s-ground:#121211;
+.an-stage{--s-ground:#F5F5F3;
   position:relative;min-height:100svh;display:grid;place-items:center;padding:48px 16px 96px;
-  background:var(--s-ground);color:#F2F1EC;
+  background:var(--s-ground);color:#161616;
   font-family:"Geist", ui-sans-serif, system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;-webkit-font-smoothing:antialiased;
   overflow:clip}
 .an-stage acrylic-nameplate{width:100%;max-width:520px}
-html:has(body.demo){background:#121211}
-body.demo{margin:0;background:#121211}
+html:has(body.demo){background:#F5F5F3}
+body.demo{margin:0;background:#F5F5F3}
 .pg-link{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom, 0px));transform:translateX(-50%);
-  font:13px/1 "Geist", ui-sans-serif, system-ui, sans-serif;color:#7A7A75;text-decoration:none;white-space:nowrap}
-.pg-link:hover{color:#F2F1EC}
-.pg-link:focus-visible{outline:2px solid #F2F1EC;outline-offset:4px;border-radius:2px}
+  font:13px/1 "Geist", ui-sans-serif, system-ui, sans-serif;color:#6E6E69;text-decoration:none;white-space:nowrap}
+.pg-link:hover{color:#161616}
+.pg-link:focus-visible{outline:2px solid #161616;outline-offset:4px;border-radius:2px}

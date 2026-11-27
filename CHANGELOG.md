@@ -4,6 +4,11 @@ All notable changes to this project are listed here. Versions follow [semantic v
 
 ## Unreleased
 
+- Pearl finish with a neon orange light; the dark finish is gone. New defaults: `light` is `#FF5A28` and `base` is `#F3F2EF`. Use the plate on a light background.
+- The light strikes pale and reaches its full colour in about 620 ms, like a neon tube, instead of going from cool to warm. In the core, `warmAt`, `WARM_MS` and `COOL` are replaced by `strikeAt`, `STRIKE_MS` and `PALE`.
+- With the light off the name is a frosted engraving; the lit name, top edge, LED strip, key icons and indicator fade in over it.
+- Key icons redrawn to one size: all five fill the same 16px box, and LinkedIn is a rounded square like Instagram.
+- The demo, playground and self-test are on a light page, and the demo has a new example portrait.
 - The job title uses Geist (or the system sans) instead of the page font, so it never falls back to a serif on a bare page.
 - Tilt is now off by default; set `tilt="on"` to turn it back on.
 - The demo and playground start with an example photo and example links.

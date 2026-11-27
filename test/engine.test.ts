@@ -1,10 +1,10 @@
 import { test } from "node:test"
 import assert from "node:assert/strict"
 import {
-  COOL,
   LIGHT_MS,
   NAME_ROOM,
-  WARM_MS,
+  PALE,
+  STRIKE_MS,
   emailAddress,
   fitRatio,
   flag,
@@ -12,7 +12,7 @@ import {
   lightAt,
   linkHref,
   toRGB,
-  warmAt,
+  strikeAt,
 } from "../src/core/engine.ts"
 
 test("toRGB reads hex, short hex, rgb() and Framer-style var() fallbacks", () => {
@@ -26,8 +26,8 @@ test("toRGB reads hex, short hex, rgb() and Framer-style var() fallbacks", () =>
 })
 
 test("toRGB falls back for empty or unknown colours", () => {
-  assert.equal(toRGB(""), "255, 244, 228")
-  assert.equal(toRGB(null), "255, 244, 228")
+  assert.equal(toRGB(""), "255, 90, 40")
+  assert.equal(toRGB(null), "255, 90, 40")
   assert.equal(toRGB("tomato", "1, 1, 1"), "1, 1, 1")
 })
 
@@ -65,12 +65,22 @@ test("lightAt only moves one way", () => {
   }
 })
 
-test("warmAt goes from cool to the chosen light", () => {
-  assert.equal(warmAt(0, "255, 244, 228"), COOL.join(", "))
-  assert.equal(warmAt(WARM_MS, "255, 244, 228"), "255, 244, 228")
-  assert.equal(warmAt(WARM_MS * 3, "10, 20, 30"), "10, 20, 30")
-  const [r] = warmAt(WARM_MS / 2, "255, 244, 228").split(",").map(Number)
-  assert.ok(r > COOL[0] && r < 255)
+test("strikeAt goes from pale to the chosen light", () => {
+  const pale = (c: number) => Math.round(c + (255 - c) * PALE)
+  assert.equal(strikeAt(0, "255, 90, 40"), `255, ${pale(90)}, ${pale(40)}`)
+  assert.equal(strikeAt(STRIKE_MS, "255, 90, 40"), "255, 90, 40")
+  assert.equal(strikeAt(STRIKE_MS * 3, "10, 20, 30"), "10, 20, 30")
+  const [, g] = strikeAt(STRIKE_MS / 2, "255, 90, 40").split(",").map(Number)
+  assert.ok(g > 90 && g < pale(90), String(g))
+})
+
+test("strikeAt only moves toward the chosen colour", () => {
+  let prev = Infinity
+  for (let t = 0; t <= STRIKE_MS; t += 8) {
+    const [, g] = strikeAt(t, "255, 90, 40").split(",").map(Number)
+    assert.ok(g <= prev)
+    prev = g
+  }
 })
 
 test("linkHref turns a plain address into mailto and leaves others alone", () => {

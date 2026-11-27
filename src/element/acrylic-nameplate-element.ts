@@ -10,7 +10,7 @@ import {
   lightAt,
   linkHref,
   toRGB,
-  warmAt,
+  strikeAt,
   type LinkKey,
 } from "../core/engine.ts"
 import { STYLES } from "../core/styles.ts"
@@ -19,13 +19,13 @@ export interface NameplateCopyDetail {
   address: string
 }
 
-// Line icons on a 24px grid, one stroke weight, so the set reads as one family
+// Line icons on a 24px grid, one stroke weight, each filling the same 16px box so the set reads as one family
 const ICONS: Record<LinkKey, { label: string; path: string }> = {
-  email: { label: "Email", path: "M4.5 6.5h15a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z M4 7.5l8 5.5 8-5.5" },
-  x: { label: "X", path: "M4.5 4.5h4l11 15h-4z M19 4.5l-6.2 7 M5 19.5l6.2-7" },
-  linkedin: { label: "LinkedIn", path: "M7.5 10.5v7 M7.5 6.75v.01 M11.5 17.5v-7 M11.5 13.5a3 3 0 0 1 6 0v4" },
-  instagram: { label: "Instagram", path: "M8 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z M12 8.75a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5z M16.75 7.25v.01" },
-  framer: { label: "Framer", path: "M6.5 3.5h11v6h-5.5z M6.5 9.5h5.5l5.5 5.5h-11z M6.5 15h5.5v5.5z" },
+  email: { label: "Email", path: "M5.5 5.5h13a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z M4 7.5l8 5.6 8-5.6" },
+  x: { label: "X", path: "M4.5 4h4.2l10.8 16h-4.2z M19.3 4l-6.6 7.4 M4.7 20l6.6-7.4" },
+  linkedin: { label: "LinkedIn", path: "M8 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z M8.6 10.6v5.4 M8.6 7.9v.01 M11.7 16v-5.4 M11.7 13.1a2.4 2.4 0 0 1 4.8 0v2.9" },
+  instagram: { label: "Instagram", path: "M8 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z M12 8.75a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5z M16.6 7.4v.01" },
+  framer: { label: "Framer", path: "M6.5 4h11v5.33h-5.5z M6.5 9.33h5.5l5.5 5.34h-11z M6.5 14.67h5.5V20z" },
 }
 const TICK = "M5 12.5l4.5 4.5L19 7.5"
 const SVG_NS = "http://www.w3.org/2000/svg"
@@ -49,7 +49,7 @@ const TEMPLATE = `
         <div class="top" aria-hidden="true"></div>
         <div class="slot" aria-hidden="true"></div>
         <div class="led" aria-hidden="true"></div>
-        <div class="chamfer" aria-hidden="true"></div>
+        <div class="rim" aria-hidden="true"></div>
         <div class="face">
           <nav class="keys" part="keys" aria-label="Links" hidden></nav>
           <span class="mark" part="mark"></span>
@@ -79,7 +79,7 @@ function addPixelFont() {
 const reducedMotion = () => typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches
 
 /**
- * <acrylic-nameplate>: an edge-lit acrylic plate in a machined base. The name glows from inside
+ * <acrylic-nameplate>: an edge-lit acrylic plate in a pearl base. The name glows from inside
  * the acrylic, the photo is a print behind it, and the rocker switch on the base turns the light on and off.
  */
 export class AcrylicNameplateElement extends HTMLElement {
@@ -203,7 +203,7 @@ export class AcrylicNameplateElement extends HTMLElement {
     const t0 = performance.now()
     const frame = (t: number) => {
       const elapsed = t - t0
-      if (next) this.#root.style.setProperty("--g", warmAt(elapsed, this.#rgb))
+      if (next) this.#root.style.setProperty("--g", strikeAt(elapsed, this.#rgb))
       const { value, done } = lightAt(from, next, elapsed)
       this.#shown = value
       this.#root.style.setProperty("--on", value.toFixed(3))
@@ -223,6 +223,8 @@ export class AcrylicNameplateElement extends HTMLElement {
 
     this.#root.classList.toggle("pixel", flag(this.getAttribute("pixel-face"), true))
     if (this.#name.textContent !== name) this.#name.textContent = name
+    // the lit copy of the engraving is drawn from this, on top of the frosted one
+    this.#name.dataset.text = name
     this.#role.textContent = role
     this.#role.hidden = !role
     this.#print.hidden = !photo
@@ -293,15 +295,14 @@ export class AcrylicNameplateElement extends HTMLElement {
         svg.setAttribute("viewBox", "0 0 24 24")
         svg.setAttribute("aria-hidden", "true")
         svg.setAttribute("class", "icon")
-        const p = document.createElementNS(SVG_NS, "path")
-        p.setAttribute("d", path)
-        p.setAttribute("fill", "none")
-        p.setAttribute("stroke", "currentColor")
-        p.setAttribute("stroke-width", "1.8")
-        p.setAttribute("stroke-linecap", "round")
-        p.setAttribute("stroke-linejoin", "round")
-        p.dataset.path = path
-        svg.appendChild(p)
+        // a grey line, and the lit line fading in on top with the light
+        for (const cls of ["dim", "lit"]) {
+          const p = document.createElementNS(SVG_NS, "path")
+          p.setAttribute("class", cls)
+          p.setAttribute("d", path)
+          p.dataset.path = path
+          svg.appendChild(p)
+        }
         cap.appendChild(svg)
         el.appendChild(cap)
         return el
@@ -400,14 +401,14 @@ export class AcrylicNameplateElement extends HTMLElement {
     }
     if (!ok) return
     const key = this.#keys.querySelector<HTMLElement>(".key.email")
-    const path = key?.querySelector("path")
-    if (key && path) {
-      path.setAttribute("d", TICK)
+    const paths = key ? [...key.querySelectorAll("path")] : []
+    if (key && paths.length) {
+      paths.forEach((p) => p.setAttribute("d", TICK))
       key.setAttribute("aria-label", "Email copied")
       key.title = "Copied"
       clearTimeout(this.#copiedTimer)
       this.#copiedTimer = window.setTimeout(() => {
-        path.setAttribute("d", path.dataset.path!)
+        paths.forEach((p) => p.setAttribute("d", p.dataset.path!))
         key.setAttribute("aria-label", `Copy ${address}`)
         key.title = `Copy ${address}`
       }, 1500)

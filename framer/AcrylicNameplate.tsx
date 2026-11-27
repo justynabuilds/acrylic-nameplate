@@ -18,15 +18,14 @@ const EASE = "cubic-bezier(.22,1,.36,1)"
 const DESIGN = 520 // the plate is drawn at 520px wide and scales with its frame
 const u = (n: number | string) => `calc(${n} * 100cqw / ${DESIGN})`
 
-const DEFAULT_LIGHT = "#FFF4E4"
-const DEFAULT_BASE = "#2B2B29"
-const COOL = [176, 206, 255] // an LED starts cool and settles warm
+const DEFAULT_LIGHT = "#FF5A28" // the orange of a real neon tube
+const DEFAULT_BASE = "#F3F2EF" // pearl
 
 const DEFAULT_COLORS = { light: DEFAULT_LIGHT, base: DEFAULT_BASE }
 // Geist Pixel (SIL Open Font License), hosted by Framer, so the plate looks right without any project fonts
 const PIXEL_FONT = "https://framerusercontent.com/assets/IQXyklzDeInO8OYtOs50tckOE.woff2"
 // example content, so the plate looks finished the moment it lands on the canvas
-const EXAMPLE_PHOTO = "https://framerusercontent.com/images/2XhRAm8hZqLAFWeel7ESoeeB5E.jpg"
+const EXAMPLE_PHOTO = "https://framerusercontent.com/images/sJl7DH0WMbeIlHtNa0w0BPSuKs.jpg"
 const DEFAULT_LINKS = {
     email: "hello@example.com",
     x: "https://x.com",
@@ -101,32 +100,32 @@ function guessFit(name: string, size: number) {
     return Math.min(1, room / (chars * size * 0.6))
 }
 
-// Line icons on a 24px grid, one stroke weight, so the set reads as one family
+// Line icons on a 24px grid, one stroke weight, each filling the same 16px box so the set reads as one family
 const ICONS = [
     {
         key: "email",
         label: "Email",
-        path: "M4.5 6.5h15a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1v-9a1 1 0 0 1 1-1z M4 7.5l8 5.5 8-5.5",
+        path: "M5.5 5.5h13a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z M4 7.5l8 5.6 8-5.6",
     },
     {
         key: "x",
         label: "X",
-        path: "M4.5 4.5h4l11 15h-4z M19 4.5l-6.2 7 M5 19.5l6.2-7",
+        path: "M4.5 4h4.2l10.8 16h-4.2z M19.3 4l-6.6 7.4 M4.7 20l6.6-7.4",
     },
     {
         key: "linkedin",
         label: "LinkedIn",
-        path: "M7.5 10.5v7 M7.5 6.75v.01 M11.5 17.5v-7 M11.5 13.5a3 3 0 0 1 6 0v4",
+        path: "M8 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z M8.6 10.6v5.4 M8.6 7.9v.01 M11.7 16v-5.4 M11.7 13.1a2.4 2.4 0 0 1 4.8 0v2.9",
     },
     {
         key: "instagram",
         label: "Instagram",
-        path: "M8 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z M12 8.75a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5z M16.75 7.25v.01",
+        path: "M8 4h8a4 4 0 0 1 4 4v8a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V8a4 4 0 0 1 4-4z M12 8.75a3.25 3.25 0 1 0 0 6.5 3.25 3.25 0 0 0 0-6.5z M16.6 7.4v.01",
     },
     {
         key: "framer",
         label: "Framer",
-        path: "M6.5 3.5h11v6h-5.5z M6.5 9.5h5.5l5.5 5.5h-11z M6.5 15h5.5v5.5z",
+        path: "M6.5 4h11v5.33h-5.5z M6.5 9.33h5.5l5.5 5.34h-11z M6.5 14.67h5.5V20z",
     },
 ]
 const TICK = "M5 12.5l4.5 4.5L19 7.5"
@@ -134,15 +133,14 @@ const TICK = "M5 12.5l4.5 4.5L19 7.5"
 const STYLES = `
 @font-face { font-family: JBIAcrylicPixel; src: url(${PIXEL_FONT}); font-display: swap; }
 .jbi-acr, .jbi-acr * { box-sizing: border-box; }
-.jbi-acr-rocker { transition: box-shadow 110ms cubic-bezier(.2,0,0,1), filter 110ms cubic-bezier(.2,0,0,1), background 110ms cubic-bezier(.2,0,0,1); }
-.jbi-acr-switch:active .jbi-acr-rocker { filter: brightness(0.9) !important; }
-.jbi-acr-key { display: block; border-radius: 4px; -webkit-tap-highlight-color: transparent; }
-.jbi-acr-cap { display: grid; place-items: center; transition: transform .08s ease, box-shadow .08s ease, filter .2s ease; }
-.jbi-acr-icon { display: block; color: rgba(var(--g), calc(0.22 + 0.78 * var(--on))); filter: drop-shadow(0 0 calc(3px * var(--on)) rgba(var(--g), calc(0.75 * var(--on)))); }
-.jbi-acr-key:not(.jbi-acr-key-off):hover .jbi-acr-cap { filter: brightness(1.14); }
-.jbi-acr-key:not(.jbi-acr-key-off):active .jbi-acr-cap { transform: translateY(1px); box-shadow: inset 0 1px 2px rgba(0,0,0,0.6), 0 0 0 rgba(0,0,0,0); filter: brightness(0.9); }
-.jbi-acr-key:focus-visible { outline: 2px solid rgba(var(--g), 0.8); outline-offset: 2px; }
-.jbi-acr-switch:focus-visible { outline: 2px solid rgba(var(--g), 0.8); outline-offset: 3px; border-radius: 4px; }
+.jbi-acr-rocker { transition: box-shadow 110ms cubic-bezier(.2,0,0,1), filter 110ms cubic-bezier(.2,0,0,1); }
+.jbi-acr-key { display: block; border-radius: 5px; -webkit-tap-highlight-color: transparent; }
+.jbi-acr-cap { display: grid; place-items: center; transition: transform .12s cubic-bezier(.2,0,0,1), filter .2s ease; }
+.jbi-acr-icon { display: block; filter: drop-shadow(0 0 calc(2.5px * var(--on)) rgba(var(--g), calc(0.55 * var(--on)))); }
+.jbi-acr-key:not(.jbi-acr-key-off):hover .jbi-acr-cap { filter: brightness(1.035); }
+.jbi-acr-key:not(.jbi-acr-key-off):active .jbi-acr-cap { transform: translateY(0.5px); filter: brightness(0.97); }
+.jbi-acr-key:focus-visible { outline: 2px solid rgba(var(--g), 0.85); outline-offset: 2px; }
+.jbi-acr-switch:focus-visible { outline: 2px solid rgba(var(--g), 0.85); outline-offset: 3px; }
 .jbi-acr[data-static] *, .jbi-acr[data-static] { transition: none !important; animation: none !important; }
 @media (prefers-reduced-motion: reduce) { .jbi-acr-plate, .jbi-acr-rocker, .jbi-acr-cap { transition: none !important; } }
 `
@@ -236,7 +234,7 @@ export default function AcrylicNameplate(props: Props) {
 
     const rgb = toRGB(colors.light)
     const base = cssColor(colors.base, DEFAULT_BASE)
-    // every shade of the base comes from one colour, so any finish still reads as lit metal
+    // every shade of the pearl comes from the one Base colour
     const shade = (pct: number) =>
         pct >= 0
             ? `color-mix(in srgb, ${base}, #fff ${pct}%)`
@@ -406,12 +404,12 @@ export default function AcrylicNameplate(props: Props) {
         const frame = (t: number) => {
             const k = Math.min(1, (t - t0) / 640)
             if (next) {
-                // colour temperature: cool at first, warm by about a third of a second
+                // like gas striking in a tube: pale at first, full colour by about two thirds of a second
                 const w = Math.min(1, (t - t0) / 620)
                 const e = 1 - Math.pow(1 - w, 2)
                 rootRef.current?.style.setProperty(
                     "--g",
-                    COOL.map((c, i) => Math.round(c + (warm[i] - c) * e)).join(", ")
+                    warm.map((c) => Math.round(c + (255 - c) * 0.55 * (1 - e))).join(", ")
                 )
             }
             const v = from + (next - from) * (1 - Math.pow(1 - k, 3))
@@ -449,6 +447,12 @@ export default function AcrylicNameplate(props: Props) {
         return { key, label, path, href }
     })
 
+
+    // a cool, slightly blue shadow colour keeps the pearl clean instead of muddy
+    const C = (a: number) => `rgba(30, 40, 64, ${a})`
+    const pearl = `linear-gradient(180deg, ${shade(70)}, ${shade(-3)})`
+    const pearlRim = `inset 0 1px 0 rgba(255,255,255,0.95), inset 0 -1px 0 ${C(0.07)}`
+
     return (
         <div
             ref={rootRef}
@@ -472,8 +476,9 @@ export default function AcrylicNameplate(props: Props) {
             <style>{STYLES}</style>
 
             <div style={{ position: "relative", perspective: u(1200) }}>
-                {/* light thrown on the wall behind and the desk in front. Each is a zero-height line with a wide
-                    soft shadow: shadows never count as overflow, so the glow can't widen the page on a phone. */}
+                {/* light thrown on the wall behind, the soft contact shadow and the pool on the desk. Each is a
+                    zero-height line with a wide soft shadow: shadows never count as overflow, so nothing can
+                    widen the page on a phone. */}
                 <div
                     aria-hidden="true"
                     style={{
@@ -483,19 +488,19 @@ export default function AcrylicNameplate(props: Props) {
                         bottom: u(150),
                         height: 0,
                         pointerEvents: "none",
-                        boxShadow: `0 0 ${u(280)} ${u(150)} ${L(0.08)}`,
+                        boxShadow: `0 0 ${u(260)} ${u(130)} ${L(0.07)}`,
                     }}
                 />
                 <div
                     aria-hidden="true"
                     style={{
                         position: "absolute",
-                        left: "22%",
-                        right: "22%",
-                        bottom: u(4),
+                        left: "8%",
+                        right: "8%",
+                        bottom: u(2),
                         height: 0,
                         pointerEvents: "none",
-                        boxShadow: `0 0 ${u(40)} ${u(18)} ${L(0.14)}, 0 0 ${u(120)} ${u(50)} ${L(0.05)}`,
+                        boxShadow: `0 ${u(10)} ${u(28)} ${u(8)} ${C(0.16)}, 0 0 ${u(110)} ${u(40)} ${L(0.06)}`,
                     }}
                 />
 
@@ -508,7 +513,7 @@ export default function AcrylicNameplate(props: Props) {
                         transition: `transform 600ms ${EASE}`,
                     }}
                 >
-                    {/* the acrylic: clear, narrower than the base, polished edges; only the edges and the engraving carry light */}
+                    {/* the acrylic: clear, narrower than the base, polished edges; the engraving and the edges carry the light */}
                     <div
                         style={{
                             position: "relative",
@@ -517,11 +522,11 @@ export default function AcrylicNameplate(props: Props) {
                             margin: `0 ${u(56)} ${u(-6)}`,
                             borderRadius: `${u(18)} ${u(18)} ${u(3)} ${u(3)}`,
                             overflow: "hidden",
-                            background: `linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.008) 55%, ${L(0.06)})`,
-                            boxShadow:
-                                "inset 1px 0 0 rgba(255,255,255,0.14), inset -1px 0 0 rgba(255,255,255,0.14), inset 0 -1px 0 rgba(255,255,255,0.06), 0 0 0 0.5px rgba(255,255,255,0.06)",
+                            background: `linear-gradient(180deg, rgba(255,255,255,0.62), rgba(255,255,255,0.34) 50%, rgba(255,255,255,0.22)), linear-gradient(0deg, ${L(0.07)}, rgba(var(--g), 0) 50%)`,
+                            boxShadow: `inset 1px 0 0 rgba(255,255,255,1), inset -1px 0 0 rgba(255,255,255,1), inset 0 0 0 1px ${C(0.08)}, 0 ${u(22)} ${u(36)} ${u(-22)} ${C(0.22)}`,
                         }}
                     >
+                        {/* light rising from the LED inside the sheet */}
                         <div
                             aria-hidden="true"
                             style={{
@@ -532,9 +537,10 @@ export default function AcrylicNameplate(props: Props) {
                                 height: "70%",
                                 pointerEvents: "none",
                                 filter: "blur(6px)",
-                                background: `radial-gradient(60% 100% at 50% 100%, ${L(0.2)}, rgba(var(--g), 0) 100%)`,
+                                background: `radial-gradient(60% 90% at 50% 100%, ${L(0.1)}, rgba(var(--g), 0) 100%)`,
                             }}
                         />
+                        {/* the top edge face of 5mm acrylic: clear glass when off, the brightest line of light when on */}
                         <div
                             aria-hidden="true"
                             style={{
@@ -544,12 +550,21 @@ export default function AcrylicNameplate(props: Props) {
                                 top: 0,
                                 height: u(6),
                                 borderRadius: `${u(17)} ${u(17)} 0 0`,
-                                borderBottom: "1px solid rgba(0,0,0,0.55)",
-                                // the top edge face of 5mm acrylic: brightest at the polished rim
-                                background: `linear-gradient(180deg, rgba(var(--g), calc(0.25 + 0.75 * var(--on))), rgba(var(--g), calc(0.1 + 0.45 * var(--on))))`,
-                                boxShadow: `0 0 6px ${L(0.9)}, 0 0 22px ${L(0.5)}`,
+                                borderBottom: `1px solid ${C(0.08)}`,
+                                background: `linear-gradient(180deg, #ffffff, ${C(0.06)})`,
                             }}
-                        />
+                        >
+                            <div
+                                style={{
+                                    position: "absolute",
+                                    inset: 0,
+                                    borderRadius: "inherit",
+                                    opacity: "var(--on)" as any,
+                                    background: `linear-gradient(180deg, rgb(var(--g)), rgba(var(--g), 0.55))`,
+                                    boxShadow: `0 0 6px rgba(var(--g), 0.8), 0 0 20px rgba(var(--g), 0.4)`,
+                                }}
+                            />
+                        </div>
 
                         <div
                             style={{
@@ -561,11 +576,6 @@ export default function AcrylicNameplate(props: Props) {
                                 alignItems: "center",
                                 justifyContent: "center",
                                 textAlign: "center",
-                                // edge light falls off as it travels up the acrylic
-                                maskImage:
-                                    "linear-gradient(0deg, #000 35%, rgba(0,0,0,0.42) 100%)",
-                                WebkitMaskImage:
-                                    "linear-gradient(0deg, #000 35%, rgba(0,0,0,0.42) 100%)",
                             }}
                         >
                             {/* centred like a real nameplate: print, name, role on one axis */}
@@ -577,10 +587,10 @@ export default function AcrylicNameplate(props: Props) {
                                         width: u(56),
                                         height: u(56),
                                         marginBottom: u(18),
-                                        borderRadius: u(4),
+                                        borderRadius: u(5),
                                         overflow: "hidden",
-                                        background: shade(-10),
-                                        boxShadow: `0 0 0 ${u(3)} rgba(240,236,228,0.9), 0 ${u(6)} ${u(14)} rgba(0,0,0,0.5)`,
+                                        background: "#ffffff",
+                                        boxShadow: `0 0 0 ${u(3)} #ffffff, 0 0 0 calc(${u(3)} + 0.5px) ${C(0.12)}, 0 ${u(6)} ${u(14)} ${C(0.18)}`,
                                     }}
                                 >
                                     <img
@@ -594,7 +604,7 @@ export default function AcrylicNameplate(props: Props) {
                                             height: "100%",
                                             objectFit: "cover",
                                             display: "block",
-                                            filter: "grayscale(1) contrast(1.05) brightness(calc(0.55 + 0.4 * var(--on)))",
+                                            filter: "grayscale(1) contrast(1.04) brightness(1.02)",
                                         }}
                                     />
                                     <div
@@ -602,41 +612,54 @@ export default function AcrylicNameplate(props: Props) {
                                         style={{
                                             position: "absolute",
                                             inset: 0,
-                                            background: `linear-gradient(0deg, ${L(0.18)}, rgba(255,255,255,0) 60%), linear-gradient(115deg, rgba(255,255,255,0.18), rgba(255,255,255,0) 40%)`,
+                                            background: `linear-gradient(0deg, ${L(0.12)}, rgba(255,255,255,0) 55%), linear-gradient(115deg, rgba(255,255,255,0.28), rgba(255,255,255,0) 40%)`,
                                         }}
                                     />
                                 </div>
                             )}
+                            {/* the engraving: frosted when off; the lit copy fades in on top, so nothing reflows */}
                             <span
                                 ref={nameRef}
                                 style={
                                     {
+                                        position: "relative",
+                                        display: "inline-block",
                                         fontFamily: PIXEL_FAMILY,
                                         ...nameRest,
                                         ["--fit" as any]: fit0.toFixed(4),
                                         fontSize: u(`${nameSize} * var(--fit)`),
                                         flex: "0 0 auto",
-                                        color: `rgba(var(--g), calc(0.16 + 0.84 * var(--on)))`,
-                                        // engraved lines glow hottest at the core, then a tight halo and a soft bloom
-                                        textShadow: `0 0 1px rgba(255,255,255, calc(0.9 * var(--on))), 0 0 6px ${L(0.75)}, 0 0 22px ${L(0.45)}, 0 0 60px ${L(0.25)}, ${u(3)} ${u(-4)} 4px ${L(0.1)}`, // last one: the engraving reflected off the back face
+                                        color: C(0.15),
+                                        textShadow: "0 1px 0 rgba(255,255,255,0.9)",
                                         whiteSpace: "nowrap",
                                         userSelect: "none",
                                     } as CSSProperties
                                 }
                             >
                                 {name}
+                                <span
+                                    aria-hidden="true"
+                                    style={{
+                                        position: "absolute",
+                                        inset: 0,
+                                        opacity: "var(--on)" as any,
+                                        color: "rgb(var(--g))",
+                                        // the lit lines: a hot core, a tight halo and a soft bloom, plus the engraving reflected off the back face
+                                        textShadow: `0 0 1px rgba(var(--g), 0.9), 0 0 5px rgba(var(--g), 0.55), 0 0 18px rgba(var(--g), 0.35), 0 0 48px rgba(var(--g), 0.2), ${u(3)} ${u(-4)} 4px rgba(var(--g), 0.12)`,
+                                    }}
+                                >
+                                    {name}
+                                </span>
                             </span>
                             {role ? (
                                 <span
                                     style={{
                                         marginTop: u(20), // clears the descenders of j and y
                                         maxWidth: "100%",
-                                        fontFamily:
-                                            '"Geist", "Inter", system-ui, sans-serif',
+                                        fontFamily: '"Geist", "Inter", system-ui, sans-serif',
                                         ...roleRest,
                                         fontSize: u(roleSize),
-                                        color: `rgba(var(--g), calc(0.3 + 0.55 * var(--on)))`,
-                                        textShadow: `0 0 6px ${L(0.5)}`,
+                                        color: C(0.62),
                                         textWrap: "balance",
                                         overflow: "hidden",
                                         display: "-webkit-box",
@@ -651,14 +674,14 @@ export default function AcrylicNameplate(props: Props) {
                         </div>
                     </div>
 
-                    {/* the machined base: a lit top surface with the slot, a chamfer, a brushed front face */}
+                    {/* the pearl base: a lit top surface with the slot, a soft rounded edge, a satin front face */}
                     <div
                         style={{
                             position: "relative",
                             height: u(66),
                             borderRadius: u(14),
-                            boxShadow:
-                                "0 0 0 1px rgba(0,0,0,0.85), 0 2px 2px rgba(0,0,0,0.35), 0 4px 4px rgba(0,0,0,0.3), 0 8px 8px rgba(0,0,0,0.28), 0 16px 16px rgba(0,0,0,0.26), 0 32px 32px rgba(0,0,0,0.22)",
+                            background: base,
+                            boxShadow: `0 0 0 0.5px ${C(0.14)}, 0 1px 1px ${C(0.06)}, 0 2px 4px ${C(0.06)}, 0 ${u(8)} ${u(16)} ${u(-4)} ${C(0.1)}, 0 ${u(22)} ${u(40)} ${u(-12)} ${C(0.16)}`,
                         }}
                     >
                         {/* top surface, catching the LED */}
@@ -669,13 +692,13 @@ export default function AcrylicNameplate(props: Props) {
                                 left: 0,
                                 right: 0,
                                 top: 0,
-                                height: u(16),
+                                height: u(17),
                                 borderRadius: `${u(14)} ${u(14)} 0 0`,
-                                background: `radial-gradient(55% 140% at 50% 30%, ${L(0.3)}, rgba(var(--g), 0)), linear-gradient(180deg, ${shade(15)}, ${shade(7)})`,
-                                boxShadow: "inset 0 1px 0 rgba(255,255,255,0.28)",
+                                background: `radial-gradient(55% 140% at 50% 30%, ${L(0.22)}, rgba(var(--g), 0)), linear-gradient(180deg, ${shade(80)}, ${shade(10)})`,
+                                boxShadow: "inset 0 1px 0 #ffffff",
                             }}
                         />
-                        {/* the slot and its LED line */}
+                        {/* the slot: a shallow pearl groove the acrylic stands in, its lower lip catching light */}
                         <div
                             aria-hidden="true"
                             style={{
@@ -685,38 +708,38 @@ export default function AcrylicNameplate(props: Props) {
                                 top: u(5),
                                 height: u(5),
                                 borderRadius: u(3),
-                                background: shade(-82),
-                                boxShadow:
-                                    "inset 0 1px 1px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.12)",
+                                background: `linear-gradient(180deg, ${shade(-15)}, ${shade(-5)})`,
+                                boxShadow: `inset 0 1px 1.5px ${C(0.16)}, inset 0 0 0 0.5px ${C(0.07)}, 0 1px 0 rgba(255,255,255,0.95)`,
                             }}
                         />
+                        {/* the LED strip inside the slot: a soft line that fades out towards both ends */}
                         <div
                             aria-hidden="true"
                             style={{
                                 position: "absolute",
-                                left: u(58),
-                                right: u(58),
-                                top: u(7),
-                                height: 1,
-                                borderRadius: 1,
-                                background: L(0.95),
-                                boxShadow: `0 0 6px ${L(0.9)}, 0 -4px 14px ${L(0.6)}`,
+                                left: u(62),
+                                right: u(62),
+                                top: u(6.5),
+                                height: u(2),
+                                borderRadius: 99,
+                                opacity: "var(--on)" as any,
+                                background: "linear-gradient(90deg, rgba(var(--g), 0), rgba(var(--g), 0.9) 16%, rgba(var(--g), 0.9) 84%, rgba(var(--g), 0))",
+                                boxShadow: `0 0 ${u(4)} rgba(var(--g), 0.45), 0 ${u(-3)} ${u(12)} rgba(var(--g), 0.25)`,
                             }}
                         />
-                        {/* chamfer between top and front */}
+                        {/* the rounded edge between top and front */}
                         <div
                             aria-hidden="true"
                             style={{
                                 position: "absolute",
-                                left: u(2),
-                                right: u(2),
-                                top: u(16),
-                                height: 1,
-                                background:
-                                    "linear-gradient(90deg, rgba(255,255,255,0.04), rgba(255,255,255,0.22) 50%, rgba(255,255,255,0.04))",
+                                left: u(3),
+                                right: u(3),
+                                top: u(17),
+                                height: u(3),
+                                background: `linear-gradient(180deg, ${C(0.07)}, rgba(255,255,255,0))`,
                             }}
                         />
-                        {/* brushed front face */}
+                        {/* satin front face */}
                         <div
                             style={{
                                 position: "absolute",
@@ -729,11 +752,11 @@ export default function AcrylicNameplate(props: Props) {
                                 display: "flex",
                                 alignItems: "center",
                                 justifyContent: "space-between",
-                                background: `repeating-linear-gradient(90deg, rgba(255,255,255,0.018) 0px, rgba(255,255,255,0.018) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px), linear-gradient(180deg, ${base}, ${shade(-40)} 70%, ${shade(-53)})`,
-                                boxShadow: "inset 0 -2px 3px rgba(0,0,0,0.55)",
+                                background: `linear-gradient(180deg, ${shade(-2)}, ${base} 45%, ${shade(-6)})`,
+                                boxShadow: `inset 0 -1px 0 rgba(255,255,255,0.8), inset 0 ${u(-6)} ${u(10)} ${u(-6)} ${C(0.08)}`,
                             }}
                         >
-                            {/* the links: small keys in one recessed housing; their icons are backlit by the same light as the plate */}
+                            {/* the links: small pearl keys in one recessed housing, backlit by the same light as the plate */}
                             {showLinks && (
                                 <nav
                                     aria-label="Links"
@@ -745,24 +768,24 @@ export default function AcrylicNameplate(props: Props) {
                                         display: "flex",
                                         gap: u(3),
                                         padding: u(3),
-                                        borderRadius: u(7),
-                                        background: shade(-75),
-                                        boxShadow:
-                                            "inset 0 1px 2px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.08)",
+                                        borderRadius: u(8),
+                                        background: shade(-7),
+                                        boxShadow: `inset 0 1px 2px ${C(0.16)}, inset 0 0 0 0.5px ${C(0.08)}, 0 1px 0 rgba(255,255,255,0.95)`,
                                     }}
                                 >
                                     {keys.map(({ key, label, path, href }) => {
                                         const tick = key === "email" && copied
+                                        const d = tick ? TICK : path
                                         const cap = (
                                             <span
                                                 className="jbi-acr-cap"
                                                 style={{
+                                                    position: "relative",
                                                     width: u(30),
                                                     height: u(22),
                                                     borderRadius: u(5),
-                                                    background: `linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0) 70%), linear-gradient(180deg, ${shade(6)}, ${shade(-20)})`,
-                                                    boxShadow:
-                                                        "inset 0 1px 0 rgba(255,255,255,0.2), 0 1px 2px rgba(0,0,0,0.7)",
+                                                    background: pearl,
+                                                    boxShadow: `${pearlRim}, 0 0 0 0.5px ${C(0.12)}, 0 1px 2px ${C(0.14)}`,
                                                 }}
                                             >
                                                 <svg
@@ -771,23 +794,23 @@ export default function AcrylicNameplate(props: Props) {
                                                     viewBox="0 0 24 24"
                                                     aria-hidden="true"
                                                     className="jbi-acr-icon"
-                                                    style={{ width: u(15), height: u(15) }}
+                                                    style={{ width: u(15), height: u(15), overflow: "visible" }}
                                                 >
+                                                    <path d={d} fill="none" stroke={C(0.42)} strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" />
                                                     <path
-                                                        d={tick ? TICK : path}
+                                                        d={d}
                                                         fill="none"
-                                                        stroke="currentColor"
-                                                        strokeWidth={1.8}
+                                                        stroke="rgb(var(--g))"
+                                                        strokeWidth={1.7}
                                                         strokeLinecap="round"
                                                         strokeLinejoin="round"
+                                                        style={{ opacity: "var(--on)" as any }}
                                                     />
                                                 </svg>
                                             </span>
                                         )
                                         if (key === "email" && href) {
-                                            const address = href
-                                                .replace(/^mailto:/i, "")
-                                                .split("?")[0]
+                                            const address = href.replace(/^mailto:/i, "").split("?")[0]
                                             return (
                                                 <button
                                                     key={key}
@@ -822,11 +845,7 @@ export default function AcrylicNameplate(props: Props) {
                                                 {cap}
                                             </a>
                                         ) : (
-                                            <span
-                                                key={key}
-                                                className="jbi-acr-key jbi-acr-key-off"
-                                                aria-hidden="true"
-                                            >
+                                            <span key={key} className="jbi-acr-key jbi-acr-key-off" aria-hidden="true">
                                                 {cap}
                                             </span>
                                         )
@@ -842,9 +861,8 @@ export default function AcrylicNameplate(props: Props) {
                                     ...markRest,
                                     fontSize: u(markSize),
                                     whiteSpace: "nowrap",
-                                    color: "rgba(255,255,255,0.16)",
-                                    textShadow:
-                                        "0 -1px 0 rgba(0,0,0,0.8), 0 1px 0 rgba(255,255,255,0.05)",
+                                    color: C(0.3),
+                                    textShadow: "0 1px 0 rgba(255,255,255,0.95)",
                                     userSelect: "none",
                                 }}
                             >
@@ -852,17 +870,29 @@ export default function AcrylicNameplate(props: Props) {
                             </span>
 
                             <div style={{ display: "flex", alignItems: "center", gap: u(12) }}>
-                                {/* the indicator: glows with the light */}
+                                {/* the indicator: a small lens in the face, lit with the plate */}
                                 <span
                                     aria-hidden="true"
                                     style={{
-                                        width: u(5),
-                                        height: u(5),
+                                        position: "relative",
+                                        width: u(6),
+                                        height: u(6),
                                         borderRadius: "50%",
-                                        background: `rgba(var(--g), calc(0.12 + 0.88 * var(--on)))`,
-                                        boxShadow: `0 0 ${u(6)} ${L(0.9)}, inset 0 0 0 0.5px rgba(0,0,0,0.4)`,
+                                        background: shade(-14),
+                                        boxShadow: `inset 0 0.5px 1px ${C(0.3)}, 0 0.5px 0 rgba(255,255,255,0.95)`,
                                     }}
-                                />
+                                >
+                                    <span
+                                        style={{
+                                            position: "absolute",
+                                            inset: 0,
+                                            borderRadius: "50%",
+                                            opacity: "var(--on)" as any,
+                                            background: "radial-gradient(circle at 50% 40%, #ffffff 0 18%, rgb(var(--g)) 46%)",
+                                            boxShadow: `0 0 ${u(5)} rgba(var(--g), 0.8), 0 0 ${u(12)} rgba(var(--g), 0.35)`,
+                                        }}
+                                    />
+                                </span>
                                 {/* the rocker switch */}
                                 <button
                                     ref={switchRef}
@@ -878,13 +908,12 @@ export default function AcrylicNameplate(props: Props) {
                                         border: 0,
                                         margin: 0,
                                         cursor: "pointer",
-                                        width: u(34),
-                                        height: u(20),
-                                        borderRadius: u(5),
-                                        padding: u(2),
-                                        background: shade(-75),
-                                        boxShadow:
-                                            "inset 0 1px 2px rgba(0,0,0,0.9), 0 1px 0 rgba(255,255,255,0.08)",
+                                        width: u(36),
+                                        height: u(22),
+                                        borderRadius: u(7),
+                                        padding: u(3),
+                                        background: shade(-7),
+                                        boxShadow: `inset 0 1px 2px ${C(0.16)}, inset 0 0 0 0.5px ${C(0.08)}, 0 1px 0 rgba(255,255,255,0.95)`,
                                         WebkitTapHighlightColor: "transparent",
                                         touchAction: "manipulation",
                                     }}
@@ -897,26 +926,22 @@ export default function AcrylicNameplate(props: Props) {
                                             height: "100%",
                                             borderRadius: u(4),
                                             overflow: "hidden",
-                                            boxShadow: "0 1px 2px rgba(0,0,0,0.7)",
+                                            boxShadow: `0 0 0 0.5px ${C(0.14)}, 0 1px 2px ${C(0.16)}`,
                                         }}
                                     >
                                         {[0, 1].map((side) => {
                                             // side 1 is "on": pressed when --sw is 1, so it sinks and the other half rises
-                                            const pressed =
-                                                side === 1 ? "var(--sw)" : "calc(1 - var(--sw))"
+                                            const pressed = side === 1 ? "var(--sw)" : "calc(1 - var(--sw))"
                                             return (
                                                 <span
                                                     key={side}
                                                     className="jbi-acr-rocker"
                                                     style={{
                                                         flex: "1 1 50%",
-                                                        background: `linear-gradient(180deg, rgba(255,255,255, calc(0.2 - 0.14 * ${pressed})), rgba(255,255,255,0) 70%), linear-gradient(180deg, ${shade(6)}, ${shade(-20)})`,
-                                                        boxShadow: `inset 0 calc(${u(2)} * ${pressed}) calc(${u(3)} * ${pressed}) rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,255,255, calc(0.22 - 0.2 * ${pressed}))`,
-                                                        filter: `brightness(calc(1.12 - 0.3 * ${pressed}))`,
-                                                        borderLeft:
-                                                            side === 1
-                                                                ? "1px solid rgba(0,0,0,0.6)"
-                                                                : undefined,
+                                                        background: pearl,
+                                                        boxShadow: `inset 0 calc(${u(2)} * ${pressed}) calc(${u(3)} * ${pressed}) ${C(0.22)}, inset 0 1px 0 rgba(255,255,255, calc(0.95 - 0.9 * ${pressed}))`,
+                                                        filter: `brightness(calc(1.02 - 0.07 * ${pressed}))`,
+                                                        borderLeft: side === 1 ? `0.5px solid ${C(0.14)}` : undefined,
                                                     }}
                                                 />
                                             )
@@ -1006,13 +1031,13 @@ addPropertyControls(AcrylicNameplate, {
                 type: ControlType.Color,
                 title: "Light",
                 defaultValue: DEFAULT_LIGHT,
-                description: "The light inside the acrylic, the LED and the keys.",
+                description: "The light in the acrylic, the LED and the keys. Neon orange by default.",
             },
             base: {
                 type: ControlType.Color,
                 title: "Base",
                 defaultValue: DEFAULT_BASE,
-                description: "The metal of the base. Its highlights and shade follow.",
+                description: "The pearl of the base. Keep it light; its highlights and shade follow.",
             },
         },
     },

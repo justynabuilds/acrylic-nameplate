@@ -3,17 +3,19 @@
 
 /** The plate is drawn at this width (px) and every size scales with the element's width. */
 export const DESIGN = 520
-export const DEFAULT_LIGHT = "#FFF4E4"
-export const DEFAULT_BASE = "#2B2B29"
+/** The orange of a real neon tube. */
+export const DEFAULT_LIGHT = "#FF5A28"
+/** Pearl. Every shade of the base is mixed from it. */
+export const DEFAULT_BASE = "#F3F2EF"
 export const DEFAULT_NAME_SIZE = 78
-/** An LED starts cool and settles warm. */
-export const COOL: readonly [number, number, number] = [176, 206, 255]
 /** How long the light takes to ease on or off. */
 export const LIGHT_MS = 640
-/** How long the colour takes to go from cool to the chosen light. */
-export const WARM_MS = 620
+/** How long the colour takes to go from pale to the chosen light. */
+export const STRIKE_MS = 620
+/** How far toward white the light starts when it switches on, like gas striking in a tube. */
+export const PALE = 0.55
 
-const FALLBACK_RGB = "255, 244, 228"
+const FALLBACK_RGB = "255, 90, 40"
 
 /** Any CSS colour a person is likely to type (hex, rgb(), var(--x, fallback)) as "r, g, b". */
 export function toRGB(color: string | null | undefined, fallback = FALLBACK_RGB): string {
@@ -56,11 +58,16 @@ export function lightAt(from: number, to: number, elapsed: number): { value: num
   return { value: from + (to - from) * easeOutCubic(k), done: k >= 1 }
 }
 
-/** The light's colour while switching on: cool first, the chosen colour by about a third of a second. */
-export function warmAt(elapsed: number, warm: string): string {
-  const target = warm.split(",").map((n) => parseFloat(n))
-  const e = easeOutQuad(clamp01(elapsed / WARM_MS))
-  return COOL.map((c, i) => Math.round(c + ((target[i] ?? c) - c) * e)).join(", ")
+/** The light's colour while switching on: pale at first, the full colour by about two thirds of a second. */
+export function strikeAt(elapsed: number, colour: string): string {
+  const e = easeOutQuad(clamp01(elapsed / STRIKE_MS))
+  return colour
+    .split(",")
+    .map((n) => {
+      const c = parseFloat(n)
+      return Math.round(c + (255 - c) * PALE * (1 - e))
+    })
+    .join(", ")
 }
 
 export const LINK_KEYS = ["email", "x", "linkedin", "instagram", "framer"] as const

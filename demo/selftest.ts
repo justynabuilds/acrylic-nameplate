@@ -1,6 +1,6 @@
 // Interaction self-test in a real browser, real frames. Open /demo/selftest.html; results print on the page.
 import "../src/element/index.ts"
-import { LIGHT_MS } from "../src/core/engine.ts"
+import { DEFAULT_LIGHT, LIGHT_MS, toRGB } from "../src/core/engine.ts"
 
 const $ = (id: string) => document.getElementById(id) as HTMLElementTagNameMap["acrylic-nameplate"]
 const a = $("a"), b = $("b"), c = $("c")
@@ -26,7 +26,7 @@ async function run() {
   check("no photo, no print", q<HTMLElement>(a, ".print").hidden)
   check("no links, no keys", q<HTMLElement>(a, ".keys").hidden)
   check("starts on", on(a) === 1 && q(a, ".switch").getAttribute("aria-checked") === "true")
-  check("start=off starts dark", on(c) === 0 && q(c, ".switch").getAttribute("aria-checked") === "false")
+  check("start=off starts with the light off", on(c) === 0 && q(c, ".switch").getAttribute("aria-checked") === "false")
   check("pixel face loaded", document.fonts.check(`12px JBIAcrylicPixel`))
 
   // the switch
@@ -47,7 +47,7 @@ async function run() {
   await wait(LIGHT_MS + 100)
   check("toggle() turns it back on", on(a) === 1 && a.on === true)
   check("turnon event", events.join() === "turnoff,turnon", events.join())
-  check("the light settles on the chosen colour", getComputedStyle(q(a, ".root")).getPropertyValue("--g").trim() === "255, 244, 228")
+  check("the light settles on the chosen colour", getComputedStyle(q(a, ".root")).getPropertyValue("--g").trim() === toRGB(DEFAULT_LIGHT))
   check("the switch is a real button (Space and Enter work)", sw.tagName === "BUTTON" && sw.getAttribute("role") === "switch" && sw.tabIndex === 0)
 
   // long name fits
@@ -62,13 +62,14 @@ async function run() {
   // attributes reflect
   a.setAttribute("name", "theo")
   a.setAttribute("light", "#9AD0FF")
-  a.setAttribute("base", "#3A3F46")
+  a.setAttribute("base", "#E8ECEF")
   a.removeAttribute("job-title")
   a.setAttribute("photo", "data:image/gif;base64,R0lGODlhAQABAAAAACw=")
   await wait(50)
   check("name attribute updates", q(a, ".name").textContent === "theo")
+  check("the lit copy of the name follows it", q(a, ".name").dataset.text === "theo")
   check("light attribute updates the light", getComputedStyle(q(a, ".root")).getPropertyValue("--g").trim() === "154, 208, 255")
-  check("base attribute sets --an-base", q(a, ".root").style.getPropertyValue("--an-base") === "#3A3F46")
+  check("base attribute sets --an-base", q(a, ".root").style.getPropertyValue("--an-base") === "#E8ECEF")
   check("removing job-title hides it", q<HTMLElement>(a, ".role").hidden)
   check("photo shows the print", !q<HTMLElement>(a, ".print").hidden && q<HTMLImageElement>(a, ".print img").alt === "theo")
   a.setAttribute("pixel-face", "off")

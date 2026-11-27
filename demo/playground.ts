@@ -54,8 +54,8 @@ const SCHEMA: [string, Ctl[]][] = [
     { k: "framer", label: "Framer", type: "text", max: 200, placeholder: "https://…", hint: "Each link you fill in becomes a backlit key on the base." },
   ]],
   ["Colours", [
-    { k: "light", label: "Light", type: "colour", hint: "The light inside the acrylic, the LED and the keys." },
-    { k: "base", label: "Base", type: "colour", hint: "The metal of the base. Its highlights and shade follow." },
+    { k: "light", label: "Light", type: "colour", hint: "The light in the acrylic, the LED and the keys. Neon orange by default." },
+    { k: "base", label: "Base", type: "colour", hint: "The pearl of the base. Keep it light; its highlights and shade follow." },
   ]],
   ["Behaviour", [
     { k: "startOn", label: "Start on", type: "toggle" },
@@ -194,8 +194,8 @@ function code(): string {
     return [
       `<script src="${SCRIPT_URL}"></script>`,
       ``,
-      `<!-- The plate is made for a dark background and fills the width you give it (520px looks best) -->`,
-      `<div style="background: #121211; padding: 48px 16px; display: grid; place-items: center">`,
+      `<!-- The plate is made for a light background and fills the width you give it (520px looks best) -->`,
+      `<div style="background: #F5F5F3; padding: 48px 16px; display: grid; place-items: center">`,
       `  <acrylic-nameplate style="width: 100%; max-width: 520px"`,
       ...a.map(([k, v]) => `    ${k}="${esc(v)}"`),
       `  ></acrylic-nameplate>`,

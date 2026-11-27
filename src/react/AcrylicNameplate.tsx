@@ -23,13 +23,13 @@ export interface AcrylicNameplateProps {
   mark?: string
   /** Each link that is set becomes a small backlit key on the base. */
   links?: AcrylicNameplateLinks
-  /** Colour of the light inside the acrylic. Default #FFF4E4. */
+  /** Colour of the light in the acrylic, the LED and the keys. Default #FF5A28, neon orange. */
   light?: string
-  /** Colour of the metal base. Default #2B2B29. */
+  /** Colour of the pearl base; keep it light. Default #F3F2EF. */
   base?: string
   /** Whether the light is on when the page loads. Default true. */
   startOn?: boolean
-  /** Turns a little toward the mouse. Default true. */
+  /** Turns a little toward the mouse. Default false. */
   tilt?: boolean
   /** A soft click when the switch flips. Default true. */
   sound?: boolean
