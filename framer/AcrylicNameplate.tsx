@@ -25,6 +25,15 @@ const COOL = [176, 206, 255] // an LED starts cool and settles warm
 const DEFAULT_COLORS = { light: DEFAULT_LIGHT, base: DEFAULT_BASE }
 // Geist Pixel (SIL Open Font License), hosted by Framer, so the plate looks right without any project fonts
 const PIXEL_FONT = "https://framerusercontent.com/assets/IQXyklzDeInO8OYtOs50tckOE.woff2"
+// example content, so the plate looks finished the moment it lands on the canvas
+const EXAMPLE_PHOTO = "https://framerusercontent.com/images/2XhRAm8hZqLAFWeel7ESoeeB5E.jpg"
+const DEFAULT_LINKS = {
+    email: "hello@example.com",
+    x: "https://x.com",
+    linkedin: "https://www.linkedin.com",
+    instagram: "https://www.instagram.com",
+    framer: "https://www.framer.com",
+}
 const PIXEL_FAMILY = 'JBIAcrylicPixel, "Geist Pixel", "Geist Mono", ui-monospace, monospace'
 const DEFAULT_NAME_FONT = { fontSize: 78, letterSpacing: "-0.045em", lineHeight: "0.86em" }
 const DEFAULT_ROLE_FONT = { fontSize: 14, letterSpacing: "0.06em", lineHeight: "1.2em" }
@@ -151,6 +160,7 @@ interface Links {
 interface Props {
     name: string
     role: string
+    showPhoto: boolean
     photo?: { src?: string; srcSet?: string; alt?: string }
     mark: string
     showLinks: boolean
@@ -183,14 +193,15 @@ export default function AcrylicNameplate(props: Props) {
         role = "product designer",
         mark = "",
         photo,
-        showLinks = false,
+        showPhoto = true,
+        showLinks = true,
         startOn = true,
         tilt = true,
         sound = true,
         haptics = true,
         style,
     } = props
-    const links: Links = { ...(props.links || {}) }
+    const links: Links = { ...DEFAULT_LINKS, ...(props.links || {}) }
     const colors = { ...DEFAULT_COLORS, ...(props.colors || {}) }
     const fonts = props.fonts || {}
     const pixel = fonts.pixel !== false
@@ -200,6 +211,11 @@ export default function AcrylicNameplate(props: Props) {
     const { size: nameSize, ...nameRest } = nameF
     const { size: roleSize, ...roleRest } = roleF
     const { size: markSize, ...markRest } = markF
+
+    // your own photo wins; with none, the example print shows until Print is turned off
+    const photoSrc = showPhoto ? photo?.src || EXAMPLE_PHOTO : ""
+    const photoSet = photo?.src ? photo.srcSet : undefined
+    const hasPhoto = !!photoSrc
 
     const isStatic = useIsStaticRenderer()
     const onCanvas = useIsOnFramerCanvas()
@@ -320,7 +336,7 @@ export default function AcrylicNameplate(props: Props) {
             fontsSet?.removeEventListener?.("loadingdone", later)
             ro?.disconnect()
         }
-    }, [name, nameSize, JSON.stringify(nameRest), photo?.src])
+    }, [name, nameSize, JSON.stringify(nameRest), photoSrc])
 
     // The audio context is made on pointer down, so making it never stalls the light easing in.
     const ensureAudio = () => {
@@ -421,7 +437,6 @@ export default function AcrylicNameplate(props: Props) {
     }
 
     const L = (a: number) => `rgba(var(--g), calc(${a} * var(--on)))`
-    const hasPhoto = !!photo?.src
     const markText = String(mark || "").trim()
 
     const keys = ICONS.map(({ key, label, path }) => {
@@ -569,10 +584,10 @@ export default function AcrylicNameplate(props: Props) {
                                     }}
                                 >
                                     <img
-                                        src={photo!.src}
-                                        srcSet={photo!.srcSet}
+                                        src={photoSrc}
+                                        srcSet={photoSet}
                                         sizes="120px"
-                                        alt={photo!.alt || name}
+                                        alt={photo?.alt || name}
                                         draggable={false}
                                         style={{
                                             width: "100%",
@@ -935,10 +950,17 @@ addPropertyControls(AcrylicNameplate, {
         defaultValue: "product designer",
         description: "Small line under the name. Leave empty for none.",
     },
+    showPhoto: {
+        type: ControlType.Boolean,
+        title: "Print",
+        defaultValue: true,
+        description: "A black and white photo above the name.",
+    },
     photo: {
         type: ControlType.ResponsiveImage,
         title: "Photo",
-        description: "Shown as a black and white print above the name. Leave empty for none.",
+        hidden: (p: any) => p.showPhoto === false,
+        description: "Your photo for the print. Until you add one, an example photo shows.",
     },
     mark: {
         type: ControlType.String,
@@ -950,7 +972,7 @@ addPropertyControls(AcrylicNameplate, {
     showLinks: {
         type: ControlType.Boolean,
         title: "Link keys",
-        defaultValue: false,
+        defaultValue: true,
         description: "Small backlit keys in the middle of the base.",
     },
     links: {
@@ -959,18 +981,18 @@ addPropertyControls(AcrylicNameplate, {
         buttonTitle: "Edit",
         hidden: (p: any) => !p.showLinks,
         description:
-            "The email key copies the address. The others open in a new tab. A key without a link shows but does nothing.",
+            "Examples to replace with your own. The email key copies the address; the others open in a new tab. Clear a field to dim its key.",
         controls: {
             email: {
                 type: ControlType.String,
                 title: "Email",
-                defaultValue: "",
+                defaultValue: DEFAULT_LINKS.email,
                 placeholder: "you@yoursite.com",
             },
-            x: { type: ControlType.Link, title: "X" },
-            linkedin: { type: ControlType.Link, title: "LinkedIn" },
-            instagram: { type: ControlType.Link, title: "Instagram" },
-            framer: { type: ControlType.Link, title: "Framer" },
+            x: { type: ControlType.Link, title: "X", defaultValue: DEFAULT_LINKS.x },
+            linkedin: { type: ControlType.Link, title: "LinkedIn", defaultValue: DEFAULT_LINKS.linkedin },
+            instagram: { type: ControlType.Link, title: "Instagram", defaultValue: DEFAULT_LINKS.instagram },
+            framer: { type: ControlType.Link, title: "Framer", defaultValue: DEFAULT_LINKS.framer },
         },
     },
 

@@ -135,4 +135,4 @@ Typecheck, tests and build also run on GitHub for every push. See [CONTRIBUTING.
 
 ## License
 
-Free for personal and other non-commercial use under the [PolyForm Noncommercial License 1.0.0](LICENSE.md). Commercial use (client work, products, sites that make money) needs a paid license: open an issue to ask. The bundled Geist Pixel font is under the [SIL Open Font License 1.1](fonts/OFL.txt).
+Free for personal and other non-commercial use under the [PolyForm Noncommercial License 1.0.0](LICENSE.md). Commercial use (client work, products, sites that make money) needs a paid license: open an issue to ask. The bundled Geist Pixel font is under the [SIL Open Font License 1.1](fonts/OFL.txt). The example portrait in the demo (`public/example-portrait.jpg`) is from [Unsplash](https://unsplash.com/license).
