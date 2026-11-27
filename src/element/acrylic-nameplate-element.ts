@@ -329,7 +329,7 @@ export class AcrylicNameplateElement extends HTMLElement {
 
   // turns toward the mouse; touch and reduced motion keep it still
   #onMove = (e: PointerEvent) => {
-    if (e.pointerType !== "mouse" || !flag(this.getAttribute("tilt"), true) || reducedMotion()) return
+    if (e.pointerType !== "mouse" || !flag(this.getAttribute("tilt"), false) || reducedMotion()) return
     const r = this.getBoundingClientRect()
     if (!r.width || !r.height) return
     const x = (e.clientX - r.left) / r.width - 0.5

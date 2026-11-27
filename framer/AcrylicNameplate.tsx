@@ -196,7 +196,7 @@ export default function AcrylicNameplate(props: Props) {
         showPhoto = true,
         showLinks = true,
         startOn = true,
-        tilt = true,
+        tilt = false,
         sound = true,
         haptics = true,
         style,
@@ -1064,7 +1064,7 @@ addPropertyControls(AcrylicNameplate, {
     tilt: {
         type: ControlType.Boolean,
         title: "Tilt",
-        defaultValue: true,
+        defaultValue: false,
         description: "Turns a little toward the mouse. Never on touch screens.",
     },
     sound: {

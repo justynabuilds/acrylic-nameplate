@@ -17,7 +17,7 @@ const initial = () => ({
   light: "",
   base: "",
   startOn: true,
-  tilt: true,
+  tilt: false,
   sound: true,
   haptics: true,
   pixelFace: true,
@@ -162,7 +162,7 @@ function attrs(): [string, string][] {
   if (S.light) a.push(["light", S.light])
   if (S.base) a.push(["base", S.base])
   if (!S.startOn) a.push(["start", "off"])
-  if (!S.tilt) a.push(["tilt", "off"])
+  if (S.tilt) a.push(["tilt", "on"])
   if (!S.sound) a.push(["sound", "off"])
   if (!S.haptics) a.push(["haptics", "off"])
   if (!S.pixelFace) a.push(["pixel-face", "off"])
@@ -211,7 +211,7 @@ function code(): string {
   if (S.light) p.push(`light="${S.light}"`)
   if (S.base) p.push(`base="${S.base}"`)
   if (!S.startOn) p.push(`startOn={false}`)
-  if (!S.tilt) p.push(`tilt={false}`)
+  if (S.tilt) p.push(`tilt`)
   if (!S.sound) p.push(`sound={false}`)
   if (!S.haptics) p.push(`haptics={false}`)
   if (!S.pixelFace) p.push(`pixelFace={false}`)

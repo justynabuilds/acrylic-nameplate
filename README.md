@@ -52,7 +52,7 @@ The Geist Pixel font for the name is inlined in the script, so there is nothing 
 | `light` | `#FFF4E4` | Colour of the light inside the acrylic, the LED and the keys. |
 | `base` | `#2B2B29` | Colour of the metal base. Its highlights and shade are mixed from it. |
 | `start` | `on` | `off` starts with the light off. Changing it later sets the light without easing. |
-| `tilt` | `on` | `off` stops the plate turning a little toward the mouse. |
+| `tilt` | `off` | `on` turns the plate a little toward the mouse. |
 | `sound` | `on` | `off` silences the switch click. |
 | `haptics` | `on` | `off` stops the short buzz on phones that support it. |
 | `pixel-face` | `on` | `off` drops the built-in Geist Pixel, so the name and mark use `--an-name-font` and `--an-mark-font` (or your site's font). |
